@@ -8,7 +8,7 @@ const path = require('path');
 const usersRoutes = require('./routes/users.js');
 const articlesRoutes = require('./routes/articles.js');
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/diplomadb', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
