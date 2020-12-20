@@ -1,2 +1,2 @@
 # news-explorer-api
-STAGE 2.1
+http://rvsverchkov-news.students.nomoredomains.work/
