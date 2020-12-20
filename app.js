@@ -8,6 +8,7 @@ const PORT = 3000;
 const path = require('path');
 const usersRoutes = require('./routes/users.js');
 const articlesRoutes = require('./routes/articles.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const NotFoundError = require('./errors/not-found-error.js');
 
 mongoose.connect('mongodb://localhost:27017/diplomadb', {
@@ -28,10 +29,13 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(requestLogger);
 app.use('/', usersRoutes);
+app.use('/', articlesRoutes);
 app.use('*', (req, res, next) => {
     next(new NotFoundError('Запрашиваемый ресурс не найден'));
 })
+app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
     const { statusCode = 500, message } = err;

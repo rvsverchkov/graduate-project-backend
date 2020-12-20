@@ -6,13 +6,6 @@ const {
     registerUser, loginUser, getUser
 } = require('../controllers/users.js');
 
-function validationUrl(value) {
-    if (!validator.isURL(value)) {
-        throw new CelebrateError('Был введен не URL адрес');
-    }
-    return value;
-}
-
 router.post('/signup', celebrate({
     body: Joi.object().keys({
         email: Joi.string().required().email(),
