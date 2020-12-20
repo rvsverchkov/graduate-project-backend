@@ -1,9 +1,28 @@
 const router = require('express').Router();
+const { celebrate, Joi, CelebrateError } = require('celebrate');
+const validator = require('validator');
+const auth = require('../middlewares/auth.js');
 const {
-    registerUser, loginUser
+    registerUser, loginUser, getUser
 } = require('../controllers/users.js');
 
-router.post('/signup', registerUser);
+function validationUrl(value) {
+    if (!validator.isURL(value)) {
+        throw new CelebrateError('Был введен не URL адрес');
+    }
+    return value;
+}
+
+router.post('/signup', celebrate({
+    body: Joi.object().keys({
+        email: Joi.string().required().email(),
+        password: Joi.string().required(),
+        name: Joi.string().min(2).max(30),
+        about: Joi.string().min(2).max(30),
+        avatar: Joi.string(),
+        }),
+    }), registerUser);
 router.post('/signin', loginUser);
+router.get('/users/me', auth, getUser);
 
 module.exports = router;
