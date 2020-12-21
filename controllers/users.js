@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 const RequestError = require('../errors/request-error.js');
-const AuthentificationError = require('../errors/authentification-error.js');
 const ConflictError = require('../errors/conflict-error.js');
 require('dotenv').config();
 
@@ -20,7 +19,12 @@ const registerUser = (req, res, next) => {
       name,
     }))
     .then((user) => res.send(user))
-    .catch(() => next(new ConflictError('Пользователь с таким адресом электронной почты уже существует')));
+    .catch((error) => {
+      if (error.name === 'MongoError' && error.code === 11000) {
+        next(new ConflictError('Пользователь уже зарегистрирован'));
+      }
+      next(error);
+    });
 };
 
 const loginUser = (req, res, next) => {
@@ -37,7 +41,9 @@ const loginUser = (req, res, next) => {
       );
       res.send({ token });
     })
-    .catch(() => next(new AuthentificationError('Неправильная почта или пароль')));
+    .catch((error) => {
+      next(error);
+    });
 };
 
 const getUser = (req, res, next) => {
