@@ -20,8 +20,8 @@ router.post('/articles', celebrate({
     text: Joi.string().required(),
     date: Joi.string().required(),
     source: Joi.string().required(),
-    link: Joi.string().custom(validationUrl),
-    image: Joi.string().custom(validationUrl),
+    link: Joi.string().custom(validationUrl).required(),
+    image: Joi.string().custom(validationUrl).required(),
   }),
 }), auth, createArticle);
 router.get('/articles', auth, getArticles);
