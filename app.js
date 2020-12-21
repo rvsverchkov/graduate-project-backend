@@ -46,6 +46,7 @@ app.use((err, req, res, next) => {
         ? 'На сервере произошла непредвиденная ошибка'
         : message,
     });
+  next();
 });
 
 app.listen(PORT, () => {
