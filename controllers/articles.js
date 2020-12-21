@@ -1,5 +1,6 @@
 const Article = require('../models/article.js');
 const PermissionError = require('../errors/permission-error.js');
+const NotFoundError = require('../errors/not-found-error.js');
 
 const createArticle = (req, res, next) => {
   const {
@@ -25,13 +26,17 @@ const getArticles = (req, res, next) => {
 const deleteArticle = (req, res, next) => {
   Article.findArticleByCredentials(req.params.id)
     .then((article) => {
-      if (article.owner.toString() === req.user._id) {
-        article.remove()
-          .then((currentArticle) => {
-            res.status(200).send(currentArticle);
-          });
+      if (article !== null) {
+        if (article.owner.toString() === req.user._id) {
+          article.remove()
+            .then((currentArticle) => {
+              res.status(200).send(currentArticle);
+            });
+        } else {
+          throw new PermissionError('Данная карточка не является вашей');
+        }
       } else {
-        throw new PermissionError('Данная карточка не является вашей');
+        throw new NotFoundError('Данная карточка отсутствует в базе данных');
       }
     })
     .catch(next);

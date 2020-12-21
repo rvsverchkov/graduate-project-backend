@@ -25,6 +25,10 @@ router.post('/articles', celebrate({
   }),
 }), auth, createArticle);
 router.get('/articles', auth, getArticles);
-router.delete('/articles/:id', auth, deleteArticle);
+router.delete('/articles/:id', celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().max(24).hex(),
+  }),
+}), auth, deleteArticle);
 
 module.exports = router;
