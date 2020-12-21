@@ -1,5 +1,4 @@
 const express = require('express');
-const helmet = require('helmet');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
@@ -19,7 +18,6 @@ mongoose.connect('mongodb://localhost:27017/diplomadb', {
   useUnifiedTopology: true,
 });
 
-app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
