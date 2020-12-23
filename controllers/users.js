@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 const RequestError = require('../errors/request-error.js');
 const ConflictError = require('../errors/conflict-error.js');
-const JWT_DEV_SECRET = require('../config.js');
+const { JWT_DEV_SECRET } = require('../config.js');
 require('dotenv').config();
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -37,7 +37,7 @@ const loginUser = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : `${JWT_DEV_SECRET}`,
+        NODE_ENV === 'production' ? JWT_SECRET : JWT_DEV_SECRET,
         { expiresIn: '7d' },
       );
       res.send({ token });
