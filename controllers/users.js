@@ -23,8 +23,9 @@ const registerUser = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'MongoError' && error.code === 11000) {
         next(new ConflictError('Пользователь уже зарегистрирован'));
+      } else {
+        next(error);
       }
-      next(error);
     });
 };
 
