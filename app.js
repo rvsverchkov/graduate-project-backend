@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-const helmet = require('helmet');
 require('dotenv').config();
 
 const app = express();
@@ -20,7 +19,6 @@ mongoose.connect(DATABASE_DEV_URL || DATABASE_URL, {
   useUnifiedTopology: true,
 });
 
-app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
