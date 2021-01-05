@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
 const RequestError = require('../errors/request-error.js');
 const ConflictError = require('../errors/conflict-error.js');
+const { JWT_DEV_SECRET } = require('../config.js');
 require('dotenv').config();
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -22,8 +23,9 @@ const registerUser = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'MongoError' && error.code === 11000) {
         next(new ConflictError('Пользователь уже зарегистрирован'));
+      } else {
+        next(error);
       }
-      next(error);
     });
 };
 
@@ -36,7 +38,7 @@ const loginUser = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : JWT_DEV_SECRET,
         { expiresIn: '7d' },
       );
       res.send({ token });
