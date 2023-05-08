@@ -3,8 +3,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 
+const allowedCors = [
+  'https://rvsverchkov-project.ru',
+  'http://rvsverchkov-project.ru',
+  'localhost:4500'
+];
+
 const app = express();
-const PORT = 4500;
+const { PORT = 4500 } = process.env;
 const path = require('path');
 const usersRoutes = require('./routes/users.js');
 const cardsRoutes = require('./routes/cards.js');
@@ -22,9 +28,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
+  const { origin } = req.headers;
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  const { method } = req;
+  const DEFAULT_ALLOWED_METHODS = "GET,HEAD,PUT,PATCH,POST,DELETE";
+  const requestHeaders = req.headers['access-control-request-headers']; 
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', requestHeaders);
+    return res.end();
+  }
   next();
 });
 
