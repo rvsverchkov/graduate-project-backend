@@ -14,8 +14,12 @@ const NotFoundError = require('./errors/not-found-error.js');
 
 const corsOptions = {
   credentials: true,
-  origin: 'https://rvsverchkov-project.ru', // сменил на http://<имя моего домена>
-  allowedHeaders: [ 'Content-Type' ],
+  origin: [
+    'http://localhost:8080',
+    'http://localhost:8081',
+    'http://localhost:8082',
+    'https://rvsverchkov-project.ru'
+  ],
   optionsSuccessStatus: 200
 };
 
