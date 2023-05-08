@@ -2,17 +2,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-require('dotenv').config();
 
 const app = express();
-const { PORT = 3000, DATABASE_URL } = process.env;
+const PORT = 3000;
+const path = require('path');
 const usersRoutes = require('./routes/users.js');
-const articlesRoutes = require('./routes/articles.js');
+const cardsRoutes = require('./routes/cards.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const NotFoundError = require('./errors/not-found-error.js');
-const { DATABASE_DEV_URL } = require('./config.js');
 
-mongoose.connect(DATABASE_DEV_URL || DATABASE_URL, {
+mongoose.connect('mongodb://localhost:27017/graduate-db', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -29,14 +28,16 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(requestLogger);
 app.use('/', usersRoutes);
-app.use('/', articlesRoutes);
+app.use('/', cardsRoutes);
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 app.use(errorLogger);
 app.use(errors());
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res
@@ -46,7 +47,6 @@ app.use((err, req, res, next) => {
         ? 'На сервере произошла непредвиденная ошибка'
         : message,
     });
-  next();
 });
 
 app.listen(PORT, () => {
