@@ -2,12 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-
-const allowedCors = [
-  'https://rvsverchkov-project.ru',
-  'http://rvsverchkov-project.ru',
-  'localhost:4500'
-];
+const cors = require('cors');
 
 const app = express();
 const { PORT = 4500 } = process.env;
@@ -27,20 +22,7 @@ mongoose.connect('mongodb://localhost:27017/graduate-db', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  const { origin } = req.headers;
-  if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  const { method } = req;
-  const DEFAULT_ALLOWED_METHODS = "GET,HEAD,PUT,PATCH,POST,DELETE";
-  const requestHeaders = req.headers['access-control-request-headers']; 
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', requestHeaders);
-    return res.end();
-  }
-  next();
-});
+app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(requestLogger);
