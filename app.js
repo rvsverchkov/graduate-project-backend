@@ -11,6 +11,9 @@ const usersRoutes = require('./routes/users.js');
 const cardsRoutes = require('./routes/cards.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const NotFoundError = require('./errors/not-found-error.js');
+const corsOptions = {
+  origin: 'https://rvsverchkov-project.ru'
+}
 
 mongoose.connect('mongodb://localhost:27017/graduate-db', {
   useNewUrlParser: true,
@@ -22,7 +25,7 @@ mongoose.connect('mongodb://localhost:27017/graduate-db', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(requestLogger);
