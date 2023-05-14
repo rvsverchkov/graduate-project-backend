@@ -5,10 +5,10 @@ const { errors } = require('celebrate');
 const cors = require('cors');
 
 const app = express();
-const { PORT = 4500 } = process.env;
+const { PORT = 3000 } = process.env;
 const path = require('path');
 const usersRoutes = require('./routes/users.js');
-const cardsRoutes = require('./routes/cards.js');
+const testsRoutes = require('./routes/tests.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const NotFoundError = require('./errors/not-found-error.js');
 
@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(requestLogger);
 app.use('/', usersRoutes);
-app.use('/', cardsRoutes);
+app.use('/', testsRoutes);
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
