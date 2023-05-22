@@ -4,6 +4,7 @@ const User = require('../models/user');
 const RequestError = require('../errors/request-error.js');
 const AuthentificationError = require('../errors/authentification-error.js');
 const ConflictError = require('../errors/conflict-error.js');
+const user = require('../models/user');
 require('dotenv').config();
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -60,14 +61,18 @@ const createUser = (req, res, next) => {
     .catch(() => next(new ConflictError('Пользователь с таким адресом электронной почты уже существует')));
 };
 
-const updateProfile = (req, res, next) => {
-  const {
-    name, about,
-  } = req.body;
-  if (!name || !about) {
-    throw new RequestError('Были введены невалидные данные');
-  }
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+const updateUserValueOffice = (req, res, next) => {
+  const { userValue } = req.body;
+  User.findByIdAndUpdate(req.user._id, { $set: {'courses.office.userValue': userValue} }, { new: true, runValidators: true })
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch(next);
+};
+
+const updateUserValueEmail = (req, res, next) => {
+  const { userValue } = req.body;
+  User.findByIdAndUpdate(req.user._id, { $set: {'courses.email.userValue': userValue} }, { new: true, runValidators: true })
     .then((user) => {
       res.status(200).send(user);
     })
@@ -88,5 +93,5 @@ const updateAvatar = (req, res, next) => {
 };
 
 module.exports = {
-  getUsers, getUserInfo, createUser, updateProfile, updateAvatar, login,
+  getUsers, getUserInfo, createUser, updateUserValueOffice, updateUserValueEmail, updateAvatar, login,
 };

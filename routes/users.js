@@ -3,7 +3,7 @@ const { celebrate, Joi, CelebrateError } = require('celebrate');
 const validator = require('validator');
 const auth = require('../middlewares/auth.js');
 const {
-  getUsers, createUser, updateProfile, updateAvatar, login, getUserInfo,
+  getUsers, createUser, updateUserValueOffice, updateUserValueEmail, updateAvatar, login, getUserInfo,
 } = require('../controllers/users');
 
 function validationUrl(value) {
@@ -30,12 +30,16 @@ router.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
-router.patch('/users/me', celebrate({
+router.patch('/users/me/office', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(30),
+    userValue: Joi.number().required()
   }),
-}), auth, updateProfile);
+}), auth, updateUserValueOffice);
+router.patch('/users/me/email', celebrate({
+  body: Joi.object().keys({
+    userValue: Joi.number().required()
+  }),
+}), auth, updateUserValueEmail);
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
     avatar: Joi.string().custom(validationUrl),

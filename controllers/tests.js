@@ -10,9 +10,18 @@ const getTests = (req, res, next) => {
 };
 
 const getOfficeTest = (req, res, next) => {
-  console.log('Поиск начался')
   test.find({
     "name": 'office'
+  })
+    .then((test) => {
+      res.status(200).send(test);
+    })
+    .catch(next);
+};
+
+const getEmailTest = (req, res, next) => {
+  test.find({
+    "name": 'email'
   })
     .then((test) => {
       res.status(200).send(test);
@@ -32,5 +41,6 @@ const createTest = (req, res, next) => {
 module.exports = {
   getTests,
   getOfficeTest,
+  getEmailTest,
   createTest
 };

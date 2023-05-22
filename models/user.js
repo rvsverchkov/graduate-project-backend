@@ -8,14 +8,31 @@ const userSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 30,
     required: false,
-    default: 'Жак-Ив Кусто',
+    default: 'Пользователь',
+  },
+  courses: {
+    type: Object,
+    default: {
+      office: {
+        userValue: 0,
+        resultValue: 5
+      },
+      email: {
+        userValue: 0,
+        resultValue: 10
+      },
+      phishing: {
+        userValue: 0,
+        resultValue: 12
+      }
+    }
   },
   about: {
     type: String,
     minlength: 2,
     maxlength: 30,
     required: false,
-    default: 'Исследователь',
+    default: 'Начинающий в области',
   },
   avatar: {
     type: String,
@@ -25,7 +42,7 @@ const userSchema = new mongoose.Schema({
       },
     },
     required: false,
-    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    default: 'https://cdn.dribbble.com/users/1770290/screenshots/6158205/bg_75.gif',
   },
   email: {
     type: String,
